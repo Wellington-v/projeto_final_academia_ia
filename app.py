@@ -18,6 +18,10 @@ except FileNotFoundError:
     print("❌ ERRO: Arquivo do modelo não encontrado.")
     exit()
 
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
 # Rota principal (Página HTML)
 @app.route('/')
 def home():
