@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previsão de Cancelamento - Academia Força Local</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+
+    <header class="bg-gray-800 p-6 shadow-md">
+        <h1 class="text-3xl font-bold text-center">🔮 Previsão de Cancelamento</h1>
+        <p class="text-center text-gray-300 mt-2">Bom dia, boa tarde ou boa noite! Estamos prontos para te ajudar, Daiane :)</p>
+    </header>
+
+    <main class="flex-1 p-8">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+            <div class="flex justify-between mb-4">
+                <button id="addRow" class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700">Adicionar Cliente</button>
+                <button id="runPrediction" class="bg-green-600 px-4 py-2 rounded hover:bg-green-700">Rodar Previsões</button>
+                <button id="exportExcel" class="bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-700">Exportar para Excel</button>
+            </div>
+
+            <table id="clientes" class="display w-full">
+                <thead>
+                    <tr>
+                        <th>Idade</th>
+                        <th>Tempo (meses)</th>
+                        <th>Frequência Semanal</th>
+                        <th>Plano (0=Basic, 1=Premium)</th>
+                        <th>Previsão</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>25</td>
+                        <td>12</td>
+                        <td>3</td>
+                        <td>0</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="mt-8">
+                <canvas id="barChart" class="mb-8"></canvas>
+                <canvas id="lineChart"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        $(document).ready(function() {
+            var table = $('#clientes').DataTable();
+
+            $('#addRow').on('click', function() {
+                table.row.add(['', '', '', '', '']).draw();
+            });
+
+            $('#runPrediction').on('click', function() {
+                table.rows().every(function() {
+                    var data = this.data();
+                    const idade = parseFloat(data[0]);
+                    const tempo = parseFloat(data[1]);
+                    const freq = parseFloat(data[2]);
+                    const plano = parseFloat(data[3]);
+
+                    if ([idade, tempo, freq, plano].some(isNaN)) {
+                        this.data([idade, tempo, freq, plano, 'Dados inválidos']);
+                        return;
+                    }
+
+                    fetch('/predict', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ features: [idade, tempo, freq, plano] })
+                    })
+                    .then(res => res.json())
+                    .then(res => {
+                        const resultado = res.cancelamento_previsto === 1 ?
+                            `⚠️ ${res.probabilidade_cancelamento}% risco` :
+                            `✅ Seguro (${100 - res.probabilidade_cancelamento}%)`;
+                        data[4] = resultado;
+                        this.data(data).draw();
+                        updateCharts();
+                    })
+                    .catch(() => {
+                        data[4] = 'Erro na previsão';
+                        this.data(data).draw();
+                    });
+                });
+            });
+
+            $('#exportExcel').on('click', function() {
+                let csv = 'Idade,Tempo,Frequência,Plano,Previsão\n';
+                table.rows().every(function() {
+                    csv += this.data().join(',') + "\n";
+                });
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.setAttribute('hidden', '');
+                a.setAttribute('href', url);
+                a.setAttribute('download', 'clientes.csv');
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            const lineCtx = document.getElementById('lineChart').getContext('2d');
+
+            const barChart = new Chart(barCtx, {
+                type: 'bar',
+                data: { labels: ['Seguro', 'Risco'], datasets: [{ label: 'Clientes', data: [0, 0], backgroundColor: ['#22c55e', '#f97316'] }] },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
+
+            const lineChart = new Chart(lineCtx, {
+                type: 'line',
+                data: { labels: [], datasets: [{ label: 'Previsões feitas', data: [], borderColor: '#3b82f6', tension: 0.1 }] },
+                options: { responsive: true }
+            });
+
+            function updateCharts() {
+                const data = table.rows().data().toArray();
+                let seguro = 0, risco = 0;
+                data.forEach(row => {
+                    if (row[4].includes('⚠️')) risco++;
+                    else if (row[4].includes('✅')) seguro++;
+                });
+                barChart.data.datasets[0].data = [seguro, risco];
+                barChart.update();
+
+                lineChart.data.labels.push(new Date().toLocaleTimeString());
+                lineChart.data.datasets[0].data.push(seguro + risco);
+                lineChart.update();
+            }
+        });
+    </script>
+
+</body>
+</html>

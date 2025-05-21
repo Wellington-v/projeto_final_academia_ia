@@ -1,0 +1,7 @@
+idade,tempo_meses,freq_semana,plano_tipo,cancelado
+25,12,3,basic,0
+30,8,2,premium,1
+22,5,1,basic,0
+35,10,4,premium,1
+28,7,2,basic,0
+40,15,3,premium,1
