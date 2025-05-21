@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard da Academia - IA</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        .tabela-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 90%;
+            max-width: 1000px;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background-color: #1e1e1e;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #333;
+        }
+
+        th {
+            background-color: #00bfff;
+        }
+
+        .chart-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 40px auto;
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .botao {
+            background-color: #00bfff;
+            color: white;
+            padding: 10px 25px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 20px;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .botao:hover {
+            background-color: #008fc1;
+        }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <h1>Dashboard da Academia</h1>
+
+    <div class="tabela-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Idade</th>
+                    <th>Sexo</th>
+                    <th>Tempo de Treino</th>
+                    <th>Frequência</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in dados %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="chart-container">
+        <h2>Distribuição dos Alunos</h2>
+        <canvas id="barChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h2>Status dos Alunos</h2>
+        <canvas id="pieChart"></canvas>
+    </div>
+
+    <a href="/previsao" class="botao">Ir para Previsão</a>
+
+    <script>
+    const risco = Number('{{ risco }}');
+    const seguro = Number('{{ seguro }}');
+
+        const barChart = new Chart(
+            document.getElementById('barChart'),
+            {
+                type: 'bar',
+                data: {
+                    labels: ['Risco de Cancelamento', 'Cliente Seguro'],
+                    datasets: [{
+                        label: 'Quantidade de Alunos',
+                        data: [risco, seguro],
+                        backgroundColor: ['#ff5252', '#4caf50']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            }
+        );
+
+        const pieChart = new Chart(
+            document.getElementById('pieChart'),
+            {
+                type: 'pie',
+                data: {
+                    labels: ['Risco de Cancelamento', 'Cliente Seguro'],
+                    datasets: [{
+                        data: [risco, seguro],
+                        backgroundColor: ['#ff5252', '#4caf50']
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            }
+        );
+    </script>
+
+</body>
+</html>
