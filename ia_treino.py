@@ -2,66 +2,76 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+import xgboost as xgb
 import pickle
-import os
+import matplotlib.pyplot as plt
 
-# Configurações de caminho
-DADOS_PATH = os.path.join('dados', 'dados_academia.csv')
-MODELO_PATH = os.path.join('modelos', 'modelo_academia.pkl')
+# Caminhos
+DATA_PATH = 'dados/dados_academia.csv'
+MODEL_PATH = 'modelos/modelo_academia.pkl'
 
-# Função para carregar dados
-def carregar_dados(caminho):
-    try:
-        dados = pd.read_csv(caminho)
-        print(f"✅ Dados carregados ({dados.shape[0]} registros, {dados.shape[1]} colunas)")
-        return dados
-    except FileNotFoundError:
-        print("❌ Erro: Arquivo de dados não encontrado.")
-        exit()
+# Carregar dados
+dados = pd.read_csv(DATA_PATH)
 
-# Função de pré-processamento
-def preprocessar_dados(dados):
-    dados = dados.dropna().drop_duplicates()
+# Pre-processamento
+le = LabelEncoder()
+for coluna in dados.select_dtypes(include=['object']).columns:
+    dados[coluna] = le.fit_transform(dados[coluna])
 
-    le = LabelEncoder()
-    for coluna in dados.select_dtypes(include=['object']).columns:
-        dados[coluna] = le.fit_transform(dados[coluna])
+X = dados.drop('cancelado', axis=1)
+y = dados['cancelado']
 
-    X = dados.drop('cancelado', axis=1)
-    y = dados['cancelado']
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
 
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
+# Dividir dados
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
 
-    return X_scaled, y, scaler
+# Testar modelos
+modelos = {
+    "RandomForest": RandomForestClassifier(n_estimators=100, random_state=42),
+    "DecisionTree": DecisionTreeClassifier(random_state=42),
+    "SVM": SVC(kernel='rbf', probability=True, random_state=42),
+    "XGBoost": xgb.XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
+}
 
-# Execução
-if __name__ == "__main__":
-    print("🔧 Iniciando treinamento do modelo...")
+resultados = {}
 
-    dados = carregar_dados(DADOS_PATH)
-    X, y, scaler = preprocessar_dados(dados)
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
-
-    modelo = RandomForestClassifier(n_estimators=100, random_state=42)
+for nome, modelo in modelos.items():
     modelo.fit(X_train, y_train)
-
     y_pred = modelo.predict(X_test)
-
-    print("\n📊 Avaliação do modelo:")
+    acc = accuracy_score(y_test, y_pred)
+    resultados[nome] = acc
+    print(f"\nModelo: {nome}")
+    print(f"Acurácia: {acc*100:.2f}%")
     print("Matriz de Confusão:")
     print(confusion_matrix(y_test, y_pred))
-    print("\nRelatório de Classificação:")
+    print("Relatório de Classificação:")
     print(classification_report(y_test, y_pred))
-    print(f"Acurácia: {accuracy_score(y_test, y_pred) * 100:.2f}%")
 
-    os.makedirs('modelos', exist_ok=True)
-    with open(MODELO_PATH, 'wb') as f:
-        pickle.dump((modelo, scaler), f)
+# Escolher o melhor modelo
+melhor_modelo_nome = max(resultados, key=resultados.get)
+melhor_modelo = modelos[melhor_modelo_nome]
 
-    print("\n✅ Modelo treinado e salvo com sucesso!")
+print(f"\n🔍 Melhor modelo: {melhor_modelo_nome} com acurácia de {resultados[melhor_modelo_nome]*100:.2f}%")
+
+# Análise de importância dos dados (se suportado)
+if melhor_modelo_nome in ["RandomForest", "DecisionTree", "XGBoost"]:
+    importancia = melhor_modelo.feature_importances_
+    plt.figure(figsize=(8,6))
+    plt.barh(X.columns, importancia)
+    plt.xlabel("Importância")
+    plt.ylabel("Variáveis")
+    plt.title(f"Importância das Variáveis — {melhor_modelo_nome}")
+    plt.tight_layout()
+    plt.show()
+
+# Salvar modelo e scaler
+with open(MODEL_PATH, 'wb') as f:
+    pickle.dump((melhor_modelo, scaler), f)
+
+print("\n✅ Modelo salvo com sucesso!")
