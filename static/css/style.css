@@ -1,110 +1,33 @@
+/* 🌌 Configurações gerais */
 body {
     background-color: #121212;
     color: white;
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
+    padding: 20px;
+    text-align: center;
+    overflow-x: hidden;
 }
 
+/* 🔝 Cabeçalho fixo */
 header {
     background-color: #1f1f1f;
     padding: 20px;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-}
-
-h1 {
-    margin: 0;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 40px auto;
-    background-color: #1e1e1e;
-    padding: 20px;
-    border-radius: 10px;
-}
-
-table {
+    position: fixed;
+    top: 0;
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+    z-index: 1000;
 }
 
-th, td {
-    padding: 12px;
-    border: 1px solid #333;
-    text-align: center;
+main {
+    margin-top: 120px; /* Espaço para o cabeçalho fixo */
 }
 
-th {
-    background-color: #00bfff;
-}
-u
-.button {
-    background-color: #00bfff;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 8px;
-    display: inline-block;
-    margin: 10px;
-}
-
-.button:hover {
-    background-color: #008fc1;
-}
-   body {
-       background-color: #121212;
-       color: white;
-       font-family: Arial, sans-serif;
-       margin: 0;
-       padding: 0;
-       display: flex;
-       flex-direction: column;
-       align-items: center;
-       justify-content: center;
-       min-height: 100vh;
-       text-align: center;
-   }
-
-   h1 {
-       font-size: 40px;
-       margin-bottom: 20px;
-   }
-
-   p {
-       font-size: 18px;
-       max-width: 600px;
-       margin-bottom: 30px;
-       line-height: 1.6;
-   }
-
-   .botao {
-       background-color: #00bfff;
-       color: white;
-       padding: 15px 30px;
-       text-decoration: none;
-       border-radius: 8px;
-       font-size: 18px;
-       transition: background-color 0.3s;
-   }
-
-   .botao:hover {
-       background-color: #008fc1;
-   }
-
-        body {
-    background-color: #121212;
-    color: white;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    text-align: center;
-}
-
+/* 🔥 Títulos */
 h1 {
-    margin-top: 20px;
+    margin-top: 0;
     font-size: 36px;
 }
 
@@ -113,6 +36,7 @@ h2 {
     font-size: 28px;
 }
 
+/* 📊 Tabelas */
 .tabela-container {
     overflow-x: auto;
     margin-top: 20px;
@@ -129,12 +53,14 @@ table {
 th, td {
     padding: 10px;
     border: 1px solid #333;
+    text-align: center;
 }
 
 th {
     background-color: #00bfff;
 }
 
+/* 📈 Gráficos */
 .chart-container {
     width: 90%;
     max-width: 800px;
@@ -144,7 +70,8 @@ th {
     border-radius: 10px;
 }
 
-.botao {
+/* 🔘 Botões */
+.botao, .button {
     background-color: #00bfff;
     color: white;
     padding: 10px 25px;
@@ -153,70 +80,37 @@ th {
     font-size: 16px;
     margin-top: 20px;
     display: inline-block;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.3s;
+    box-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff;
+    animation: pulse 2s infinite;
 }
 
-.botao:hover {
+.botao:hover, .button:hover {
     background-color: #008fc1;
+    transform: scale(1.05);
 }
 
-.texto-container {
-    max-width: 800px;
-    margin: 30px auto;
+/* 🪄 Animação de pulsação */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 5px #00bfff;
+    }
+    50% {
+        box-shadow: 0 0 20px #00bfff, 0 0 40px #00bfff;
+    }
+    100% {
+        box-shadow: 0 0 5px #00bfff;
+    }
+}
+
+/* ✨ Animação dos blocos aparecendo */
+.texto-container, .tabela-container, .chart-container {
     background-color: #1e1e1e;
     padding: 20px;
     border-radius: 10px;
-    text-align: left;
-}
-
-.texto-container p {
-    line-height: 1.8;
-    margin-bottom: 15px;
-    font-size: 18px;
-}
-
-.botoes-container {
-    margin-top: 30px;
-}
-
-/* 🌌 Fundo animado com brilhos */
-body {
-    background-color: #121212;
-    color: white;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    text-align: center;
-    overflow: hidden;
-}
-
-/* ✨ Estrelas animadas no fundo */
-body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(white 1px, transparent 1px) repeat;
-    background-size: 50px 50px;
-    animation: fundoBrilho 5s linear infinite;
-    opacity: 0.1;
-    z-index: -1;
-}
-
-@keyframes fundoBrilho {
-    from {
-        background-position: 0 0;
-    }
-    to {
-        background-position: 50px 50px;
-    }
-}
-
-/* ✨ Títulos que aparecem magicamente */
-h1, h2 {
-    animation: aparecer 1.2s ease;
+    margin: 20px auto;
+    max-width: 900px;
+    animation: aparecer 1.5s ease;
 }
 
 @keyframes aparecer {
@@ -230,39 +124,26 @@ h1, h2 {
     }
 }
 
-/* 🔥 Botão neon pulsando */
-.botao {
-    background-color: #00bfff;
-    color: white;
-    padding: 10px 25px;
-    border-radius: 8px;
-    font-size: 16px;
-    margin-top: 20px;
-    display: inline-block;
-    text-decoration: none;
-    transition: background-color 0.3s, transform 0.3s;
-    box-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff;
-    animation: pulse 2s infinite;
+/* ✨ Fundo com brilhinhos */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(white 1px, transparent 1px) repeat;
+    background-size: 50px 50px;
+    animation: fundoBrilho 5s linear infinite;
+    opacity: 0.05;
+    z-index: -1;
 }
 
-@keyframes pulse {
-    0% {
-        box-shadow: 0 0 5px #00bfff;
+@keyframes fundoBrilho {
+    from {
+        background-position: 0 0;
     }
-    50% {
-        box-shadow: 0 0 20px #00bfff, 0 0 40px #00bfff;
+    to {
+        background-position: 50px 50px;
     }
-    100% {
-        box-shadow: 0 0 5px #00bfff;
-    }
-}
-
-/* ✨ Blocos com fade e glow */
-.texto-container, .tabela-container, .chart-container {
-    background-color: #1e1e1e;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 20px auto;
-    max-width: 900px;
-    animation: aparecer 1.5s ease;
 }
