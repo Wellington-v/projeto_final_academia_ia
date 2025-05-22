@@ -8,6 +8,12 @@
 </head>
 <body>
 
+<div id="tela-carregamento">
+    <div class="spinner"></div>
+    <p>Carregando...</p>
+</div>
+
+
     <h1>Como funciona a IA da Academia?</h1>
 
     <div class="texto-container">
@@ -47,6 +53,18 @@
         <a href="/previsao" class="botao">🔮 Ir para Previsões</a>
         <a href="/graficos" class="botao">📊 Ver Gráficos</a>
     </div>
+
+    <div class="botoes-container">
+        <a href="/" class="botao">🏠 Início</a>
+        <a href="javascript:history.back()" class="botao">🔙 Voltar</a>
+    </div>
+
+<script>
+    window.addEventListener("load", function() {
+        document.body.classList.add("carregado");
+    });
+</script>
+
 
 </body>
 </html>

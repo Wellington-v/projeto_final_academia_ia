@@ -147,3 +147,65 @@ body::before {
         background-position: 50px 50px;
     }
 }
+
+.botoes-container {
+    margin-top: 30px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.botao {
+    background-color: #00bfff;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-top: 20px;
+    display: inline-block;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.3s;
+    box-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff;
+    animation: pulse 2s infinite;
+}
+
+.botao:hover {
+    background-color: #008fc1;
+    transform: scale(1.05);
+}
+
+/* 🎬 Tela de Carregamento */
+#tela-carregamento {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #121212;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.spinner {
+    border: 8px solid #333;
+    border-top: 8px solid #00bfff;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#tela-carregamento p {
+    color: white;
+    margin-top: 16px;
+    font-size: 18px;
+}

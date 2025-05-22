@@ -8,6 +8,12 @@
 </head>
 <body>
 
+<div id="tela-carregamento">
+    <div class="spinner"></div>
+    <p>Carregando...</p>
+</div>
+
+
     <h1>Bem-vindo(a) ao Sistema de IA - Academia Força Local</h1>
 
     <div class="texto-container">
@@ -32,6 +38,13 @@
         <a href="/previsao" class="botao">🔮 Fazer Previsões</a>
         <a href="/graficos" class="botao">📊 Ver Gráficos</a>
     </div>
+
+<script>
+    window.addEventListener("load", function() {
+        document.body.classList.add("carregado");
+    });
+</script>
+
 
 </body>
 </html>
