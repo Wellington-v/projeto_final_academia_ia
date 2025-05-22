@@ -3,80 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Como Funciona a IA - Academia</title>
-    <style>
-        body {
-            background-color: #121212;
-            color: white;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            text-align: center;
-        }
+    <title>Como Funciona a IA - Academia Força Local</title>
 
-        h1 {
-            font-size: 40px;
-            margin-top: 40px;
-        }
-
-        p {
-            max-width: 800px;
-            margin: 20px;
-            font-size: 18px;
-            line-height: 1.6;
-        }
-
-        ul {
-            text-align: left;
-            max-width: 700px;
-            font-size: 18px;
-        }
-
-        li {
-            margin-bottom: 10px;
-        }
-
-        .botao {
-            background-color: #00bfff;
-            color: white;
-            padding: 15px 30px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 18px;
-            margin-top: 30px;
-            transition: background-color 0.3s;
-        }
-
-        .botao:hover {
-            background-color: #008fc1;
-        }
-    </style>
+    <!-- Link pro CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
 
-    <h1>Como Funciona a Inteligência Artificial</h1>
+    <h1>🧠 Como Funciona a IA da Academia</h1>
 
-    <p>
-        Este sistema utiliza inteligência artificial para ajudar a prever quais alunos da academia estão em risco de cancelar seus planos.
-        A IA foi treinada com dados históricos da academia, analisando padrões de comportamento, frequência, tempo de treino e outros fatores.
-    </p>
+    <div class="texto-container">
+        <p>
+            Este sistema utiliza Inteligência Artificial para ajudar na gestão da sua academia.
+            Ele analisa os dados dos alunos, como idade, tempo de treino, frequência e outros fatores
+            para prever quais alunos estão com maior risco de cancelar o plano.
+        </p>
+        <p>
+            O objetivo é te dar informações valiosas para agir antes que o cancelamento aconteça,
+            oferecendo suporte, incentivo ou estratégias personalizadas para manter seus alunos motivados.
+        </p>
+        <p>
+            Na aba <strong>"Dashboard"</strong>, você encontra gráficos com o status geral dos alunos.<br>
+            Na aba <strong>"Previsão"</strong>, você pode simular novos cenários e ver a previsão da IA
+            sobre a possibilidade de cancelamento.
+        </p>
+    </div>
 
-    <ul>
-        <li>✔️ Leva em conta informações como <b>idade</b>, <b>sexo</b>, <b>tempo de treino</b> e <b>frequência semanal</b>.</li>
-        <li>✔️ O modelo aprende padrões dos alunos que cancelaram e dos que permaneceram.</li>
-        <li>✔️ Quando você insere os dados, a IA analisa e mostra se o aluno está <b>seguro</b> ou em <b>risco de cancelamento</b>.</li>
-        <li>✔️ Isso permite agir antes, oferecendo suporte, promoções ou incentivo.</li>
-    </ul>
-
-    <p>
-        O objetivo é ajudar na gestão, reduzindo a evasão de alunos e melhorando os resultados da sua academia!
-    </p>
-
-    <a href="/previsao" class="botao">Ir para Previsão</a>
+    <div class="botoes-container">
+        <a href="/graficos" class="botao">Ir para Dashboard</a>
+        <a href="/previsao" class="botao">Ir para Previsão</a>
+    </div>
 
 </body>
 </html>
