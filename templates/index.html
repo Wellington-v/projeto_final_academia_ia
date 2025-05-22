@@ -17,11 +17,11 @@
 
 <body>
 
-<div id="tela-carregamento">
-    <div class="spinner"></div>
-    <p>Carregando...</p>
-</div>
-
+    <!-- 🔥 Tela de Carregamento -->
+    <div id="tela-carregamento">
+        <div class="spinner"></div>
+        <p>Carregando...</p>
+    </div>
 
     <header>
         <h1>🔮 Previsão de Cancelamento</h1>
@@ -30,9 +30,9 @@
 
     <main class="container">
         <div class="botoes-container">
-            <button id="addRow" class="botao">Adicionar Cliente</button>
-            <button id="runPrediction" class="botao">Rodar Previsões</button>
-            <button id="exportExcel" class="botao">Exportar para Excel</button>
+            <button id="addRow" class="botao">➕ Adicionar Cliente</button>
+            <button id="runPrediction" class="botao">🧠 Rodar Previsões</button>
+            <button id="exportExcel" class="botao">📥 Exportar para Excel</button>
         </div>
 
         <table id="clientes" class="display">
@@ -57,16 +57,16 @@
         </table>
 
         <div class="chart-container">
-            <h2>Resumo das Previsões</h2>
+            <h2>📊 Resumo das Previsões</h2>
             <canvas id="barChart"></canvas>
             <canvas id="lineChart" style="margin-top: 20px;"></canvas>
         </div>
     </main>
 
     <div class="botoes-container">
-        <a href="/" class="botao">Home</a>
-        <a href="/graficos" class="botao">Gráficos</a>
-        <a href="/explicacao" class="botao">Explicação</a>
+        <a href="/" class="botao">🏠 Início</a>
+        <a href="/graficos" class="botao">📊 Gráficos</a>
+        <a href="/explicacao" class="botao">❓ Explicação</a>
     </div>
 
     <script>
@@ -172,14 +172,12 @@
                 lineChart.update();
             }
         });
+
+        // Script da tela de carregamento
+        window.addEventListener("load", function() {
+            document.body.classList.add("carregado");
+        });
     </script>
-
-<script>
-    window.addEventListener("load", function() {
-        document.body.classList.add("carregado");
-    });
-</script>
-
 
 </body>
 </html>

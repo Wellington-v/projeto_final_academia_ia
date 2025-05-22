@@ -9,11 +9,11 @@
 </head>
 <body>
 
-<div id="tela-carregamento">
-    <div class="spinner"></div>
-    <p>Carregando...</p>
-</div>
-
+    <!-- 🔥 Tela de Carregamento -->
+    <div id="tela-carregamento">
+        <div class="spinner"></div>
+        <p>Carregando...</p>
+    </div>
 
     <h1>Dashboard da Academia - Análise dos Dados</h1>
 
@@ -79,55 +79,48 @@
         <a href="/previsao" class="botao">🔮 Ir para Previsões</a>
     </div>
 
+    <!-- 🔧 Scripts -->
     <script>
     const risco = Number('{{ risco }}');
     const seguro = Number('{{ seguro }}');
 
-    const barChart = new Chart(
-        document.getElementById('barChart'),
-        {
-            type: 'bar',
-            data: {
-                labels: ['Risco de Cancelamento', 'Cliente Seguro'],
-                datasets: [{
-                    label: 'Quantidade de Alunos',
-                    data: [risco, seguro],
-                    backgroundColor: ['#ff5252', '#4caf50']
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
-                }
+    const barChart = new Chart(document.getElementById('barChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Risco de Cancelamento', 'Cliente Seguro'],
+            datasets: [{
+                label: 'Quantidade de Alunos',
+                data: [risco, seguro],
+                backgroundColor: ['#ff5252', '#4caf50']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
             }
         }
-    );
+    });
 
-    const pieChart = new Chart(
-        document.getElementById('pieChart'),
-        {
-            type: 'pie',
-            data: {
-                labels: ['Risco de Cancelamento', 'Cliente Seguro'],
-                datasets: [{
-                    data: [risco, seguro],
-                    backgroundColor: ['#ff5252', '#4caf50']
-                }]
-            },
-            options: {
-                responsive: true
-            }
+    const pieChart = new Chart(document.getElementById('pieChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Risco de Cancelamento', 'Cliente Seguro'],
+            datasets: [{
+                data: [risco, seguro],
+                backgroundColor: ['#ff5252', '#4caf50']
+            }]
+        },
+        options: {
+            responsive: true
         }
-    );
-    </script>
+    });
 
-<script>
+    // 🌀 Script da Tela de Carregamento
     window.addEventListener("load", function() {
         document.body.classList.add("carregado");
     });
-</script>
-
+    </script>
 
 </body>
 </html>
