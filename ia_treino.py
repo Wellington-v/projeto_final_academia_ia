@@ -22,8 +22,8 @@ le = LabelEncoder()
 for coluna in dados.select_dtypes(include=['object']).columns:
     dados[coluna] = le.fit_transform(dados[coluna])
 
-X = dados.drop('cancelado', axis=1)
-y = dados['cancelado']
+X = dados.drop('Status', axis=1)
+y = dados['Status']
 
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
