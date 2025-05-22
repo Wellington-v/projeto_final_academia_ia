@@ -25,7 +25,7 @@ def home():
     return render_template('home.html')
 
 # 🔥 Rota EXPLICAÇÃO (Sobre a IA)
-@app.route('/')
+@app.route('/explicacao')
 def explicacao():
     return render_template('explicacao.html')
 
