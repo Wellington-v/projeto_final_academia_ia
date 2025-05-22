@@ -4,24 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bem-vindo(a) - IA Academia</title>
-
-    <!-- Link do CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
-    <h1>Bem-vindo(a) ao Sistema IA - Academia Força Local</h1>
+    <h1>Bem-vindo(a) ao Sistema de IA - Academia Força Local</h1>
 
-    <p>
-        Este sistema usa inteligência artificial para prever quais alunos têm maior risco
-        de cancelar seus planos. Assim, você poderá tomar decisões mais assertivas
-        e melhorar o desempenho da sua academia!
-    </p>
+    <div class="texto-container">
+        <p>
+            O nosso sistema foi desenvolvido especialmente para ajudar na gestão da sua academia. 
+            Usamos inteligência artificial para analisar os dados dos alunos e identificar quais 
+            deles possuem maior risco de cancelamento do plano. Com isso, você pode tomar decisões 
+            mais rápidas, assertivas e personalizadas para manter seus alunos ativos e motivados!
+        </p>
+        <p>
+            Aqui você encontrará ferramentas inteligentes que te ajudam a entender melhor 
+            o comportamento dos alunos, visualizar gráficos de desempenho e gerar previsões de 
+            risco, tudo de forma simples, rápida e intuitiva.
+        </p>
+        <p>
+            Utilize os botões abaixo para acessar as funcionalidades do sistema.
+        </p>
+    </div>
 
     <div class="botoes-container">
-        <a href="/previsao" class="botao">Previsão</a>
-        <a href="/graficos" class="botao">Gráficos</a>
-        <a href="/explicacao" class="botao">Explicação</a>
+        <a href="/explicacao" class="botao">📖 Entender a IA</a>
+        <a href="/previsao" class="botao">🔮 Fazer Previsões</a>
+        <a href="/graficos" class="botao">📊 Ver Gráficos</a>
     </div>
 
 </body>

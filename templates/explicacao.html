@@ -3,36 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Como Funciona a IA - Academia Força Local</title>
-
-    <!-- Link pro CSS -->
+    <title>Como Funciona a IA?</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
 <body>
 
-    <h1>Como Funciona a IA da Academia</h1>
+    <h1>Como funciona a IA da Academia?</h1>
 
     <div class="texto-container">
         <p>
-            Este sistema utiliza Inteligência Artificial para ajudar na gestão da sua academia.
-            Ele analisa os dados dos alunos, como idade, tempo de treino, frequência e outros fatores
-            para prever quais alunos estão com maior risco de cancelar o plano.
+            A nossa inteligência artificial foi criada para ajudar você, Daiane, na gestão dos alunos da Academia Força Local. 
+            Ela analisa uma série de informações dos alunos, como:
         </p>
+        <ul>
+            <li>➡️ Idade do aluno</li>
+            <li>➡️ Tempo de permanência na academia (em meses)</li>
+            <li>➡️ Frequência semanal (quantas vezes o aluno treina por semana)</li>
+            <li>➡️ Tipo de plano (Básico ou Premium)</li>
+        </ul>
+
         <p>
-            O objetivo é te dar informações valiosas para agir antes que o cancelamento aconteça,
-            oferecendo suporte, incentivo ou estratégias personalizadas para manter seus alunos motivados.
+            Com esses dados, o sistema gera uma previsão sobre o risco de cancelamento do aluno.
+            Se a IA identificar que há uma alta probabilidade do aluno desistir, 
+            ela te informa com antecedência. Assim, você pode agir oferecendo promoções, suporte, 
+            acompanhamento personalizado ou qualquer outra estratégia para melhorar a experiência do aluno.
         </p>
+
         <p>
-            Na aba <strong>"Dashboard"</strong>, você encontra gráficos com o status geral dos alunos.<br>
-            Na aba <strong>"Previsão"</strong>, você pode simular novos cenários e ver a previsão da IA
-            sobre a possibilidade de cancelamento.
+            A IA foi treinada com diversos algoritmos de aprendizado de máquina, 
+            como Random Forest, SVM e XGBoost, utilizando dados reais e simulados para 
+            garantir uma previsão mais precisa possível.
+        </p>
+
+        <p>
+            O objetivo não é apenas prever o cancelamento, mas fornecer uma ferramenta 
+            inteligente que te ajude a cuidar dos seus alunos, aumentar a retenção e, claro, 
+            garantir o sucesso da sua academia!
         </p>
     </div>
 
     <div class="botoes-container">
-        <a href="/graficos" class="botao">Ir para Dashboard</a>
-        <a href="/previsao" class="botao">Ir para Previsão</a>
+        <a href="/" class="botao">🏠 Voltar ao Início</a>
+        <a href="/previsao" class="botao">🔮 Ir para Previsões</a>
+        <a href="/graficos" class="botao">📊 Ver Gráficos</a>
     </div>
 
 </body>

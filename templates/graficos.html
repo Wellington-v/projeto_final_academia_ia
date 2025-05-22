@@ -3,18 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard da Academia - IA</title>
-
-    <!-- Link para o CSS -->
+    <title>Dashboard da Academia</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-    <!-- Bibliotecas -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-
 <body>
 
-    <h1>Dashboard da Academia</h1>
+    <h1>Dashboard da Academia - Análise dos Dados</h1>
+
+    <div class="texto-container">
+        <p>
+            Nesta página, você encontra uma visão geral dos dados dos alunos cadastrados na academia.
+            A tabela exibe informações como idade, sexo, tempo de treino, frequência semanal e o status atual 
+            de cada aluno (se está ativo ou em risco de cancelamento).
+        </p>
+
+        <p>
+            Abaixo da tabela, você também verá dois gráficos que ajudam a visualizar melhor a situação atual da academia:
+        </p>
+        <ul>
+            <li>📊 <strong>Gráfico de Barras:</strong> Mostra a quantidade de alunos que estão seguros e a quantidade que está em risco de cancelamento.</li>
+            <li>🥧 <strong>Gráfico de Pizza:</strong> Apresenta a proporção percentual entre alunos em risco e alunos seguros.</li>
+        </ul>
+
+        <p>
+            Esses gráficos são atualizados automaticamente conforme os dados dos alunos.
+            Eles ajudam você a tomar decisões rápidas, baseadas em dados, 
+            para melhorar a retenção e o desempenho geral da academia.
+        </p>
+    </div>
 
     <div class="tabela-container">
         <table>
@@ -51,49 +68,52 @@
         <canvas id="pieChart"></canvas>
     </div>
 
-    <a href="/previsao" class="botao">Ir para Previsão</a>
+    <div class="botoes-container">
+        <a href="/" class="botao">🏠 Voltar ao Início</a>
+        <a href="/previsao" class="botao">🔮 Ir para Previsões</a>
+    </div>
 
     <script>
-        const risco = Number('{{ risco }}');
-        const seguro = Number('{{ seguro }}');
+    const risco = Number('{{ risco }}');
+    const seguro = Number('{{ seguro }}');
 
-        const barChart = new Chart(
-            document.getElementById('barChart'),
-            {
-                type: 'bar',
-                data: {
-                    labels: ['Risco de Cancelamento', 'Cliente Seguro'],
-                    datasets: [{
-                        label: 'Quantidade de Alunos',
-                        data: [risco, seguro],
-                        backgroundColor: ['#ff5252', '#4caf50']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false }
-                    }
+    const barChart = new Chart(
+        document.getElementById('barChart'),
+        {
+            type: 'bar',
+            data: {
+                labels: ['Risco de Cancelamento', 'Cliente Seguro'],
+                datasets: [{
+                    label: 'Quantidade de Alunos',
+                    data: [risco, seguro],
+                    backgroundColor: ['#ff5252', '#4caf50']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
                 }
             }
-        );
+        }
+    );
 
-        const pieChart = new Chart(
-            document.getElementById('pieChart'),
-            {
-                type: 'pie',
-                data: {
-                    labels: ['Risco de Cancelamento', 'Cliente Seguro'],
-                    datasets: [{
-                        data: [risco, seguro],
-                        backgroundColor: ['#ff5252', '#4caf50']
-                    }]
-                },
-                options: {
-                    responsive: true
-                }
+    const pieChart = new Chart(
+        document.getElementById('pieChart'),
+        {
+            type: 'pie',
+            data: {
+                labels: ['Risco de Cancelamento', 'Cliente Seguro'],
+                datasets: [{
+                    data: [risco, seguro],
+                    backgroundColor: ['#ff5252', '#4caf50']
+                }]
+            },
+            options: {
+                responsive: true
             }
-        );
+        }
+    );
     </script>
 
 </body>
