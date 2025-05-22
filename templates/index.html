@@ -4,57 +4,64 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Previsão de Cancelamento - Academia Força Local</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+
+    <!-- Link do CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Bibliotecas -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-    
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
 </head>
-<body class="bg-gray-900 text-white min-h-screen flex flex-col">Us
 
-    <header class="bg-gray-800 p-6 shadow-md">
-        <h1 class="text-3xl font-bold text-center">🔮 Previsão de Cancelamento</h1>
-        <p class="text-center text-gray-300 mt-2">Bom dia, boa tarde ou boa noite! Estamos prontos para te ajudar, Daiane :)</p>
+<body>
+
+    <header>
+        <h1>🔮 Previsão de Cancelamento</h1>
+        <p>Bem-vinda, Daiane! Aqui você pode prever o risco de cancelamento dos alunos.</p>
     </header>
 
-    <main class="flex-1 p-8">
-        <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
-            <div class="flex justify-between mb-4">
-                <button id="addRow" class="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700">Adicionar Cliente</button>
-                <button id="runPrediction" class="bg-green-600 px-4 py-2 rounded hover:bg-green-700">Rodar Previsões</button>
-                <button id="exportExcel" class="bg-yellow-600 px-4 py-2 rounded hover:bg-yellow-700">Exportar para Excel</button>
-            </div>
+    <main class="container">
+        <div class="botoes-container">
+            <button id="addRow" class="botao">Adicionar Cliente</button>
+            <button id="runPrediction" class="botao">Rodar Previsões</button>
+            <button id="exportExcel" class="botao">Exportar para Excel</button>
+        </div>
 
-            <table id="clientes" class="display w-full">
-                <thead>
-                    <tr>
-                        <th>Idade</th>
-                        <th>Tempo (meses)</th>
-                        <th>Frequência Semanal</th>
-                        <th>Plano (0=Basic, 1=Premium)</th>
-                        <th>Previsão</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>25</td>
-                        <td>12</td>
-                        <td>3</td>
-                        <td>0</td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
+        <table id="clientes" class="display">
+            <thead>
+                <tr>
+                    <th>Idade</th>
+                    <th>Tempo (meses)</th>
+                    <th>Frequência Semanal</th>
+                    <th>Plano (0=Basic, 1=Premium)</th>
+                    <th>Previsão</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>25</td>
+                    <td>12</td>
+                    <td>3</td>
+                    <td>0</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
 
-            <div class="mt-8">
-                <canvas id="barChart" class="mb-8"></canvas>
-                <canvas id="lineChart"></canvas>
-            </div>
+        <div class="chart-container">
+            <h2>Resumo das Previsões</h2>
+            <canvas id="barChart"></canvas>
+            <canvas id="lineChart" style="margin-top: 20px;"></canvas>
         </div>
     </main>
+
+    <div class="botoes-container">
+        <a href="/" class="botao">Home</a>
+        <a href="/graficos" class="botao">Gráficos</a>
+        <a href="/explicacao" class="botao">Explicação</a>
+    </div>
 
     <script>
         $(document).ready(function() {
@@ -119,13 +126,28 @@
 
             const barChart = new Chart(barCtx, {
                 type: 'bar',
-                data: { labels: ['Seguro', 'Risco'], datasets: [{ label: 'Clientes', data: [0, 0], backgroundColor: ['#22c55e', '#f97316'] }] },
+                data: {
+                    labels: ['Seguro', 'Risco'],
+                    datasets: [{
+                        label: 'Clientes',
+                        data: [0, 0],
+                        backgroundColor: ['#22c55e', '#f97316']
+                    }]
+                },
                 options: { responsive: true, plugins: { legend: { display: false } } }
             });
 
             const lineChart = new Chart(lineCtx, {
                 type: 'line',
-                data: { labels: [], datasets: [{ label: 'Previsões feitas', data: [], borderColor: '#3b82f6', tension: 0.1 }] },
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Previsões feitas',
+                        data: [],
+                        borderColor: '#3b82f6',
+                        tension: 0.1
+                    }]
+                },
                 options: { responsive: true }
             });
 

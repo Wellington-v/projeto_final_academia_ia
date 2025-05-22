@@ -1,11 +1,28 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bem-vindo(a) - IA Academia</title>
 
-    <!-- Link do seu CSS -->
+    <!-- Link do CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+<body>
+
+    <h1>Bem-vindo(a) ao Sistema IA - Academia Força Local</h1>
+
+    <p>
+        Este sistema usa inteligência artificial para prever quais alunos têm maior risco
+        de cancelar seus planos. Assim, você poderá tomar decisões mais assertivas
+        e melhorar o desempenho da sua academia!
+    </p>
+
+    <div class="botoes-container">
+        <a href="/previsao" class="botao">Previsão</a>
+        <a href="/graficos" class="botao">Gráficos</a>
+        <a href="/explicacao" class="botao">Explicação</a>
+    </div>
+
+</body>
+</html>
