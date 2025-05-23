@@ -29,6 +29,11 @@ def home():
 def explicacao():
     return render_template('explicacao.html')
 
+@app.route('/contato')
+def contato():
+    return render_template('contato.html')
+
+
 # 🔥 Rota GRÁFICOS
 @app.route('/graficos')
 def graficos():
@@ -49,11 +54,6 @@ def graficos():
 @app.route('/previsao')
 def previsao():
     return render_template('index.html')
-
-@app.route('/contato')
-def contato():
-    return render_template('contato.html')
-
 
 # 🔥 API de previsão (backend)
 @app.route('/predict', methods=['POST'])
