@@ -50,6 +50,11 @@ def graficos():
 def previsao():
     return render_template('index.html')
 
+@app.route('/contato')
+def contato():
+    return render_template('contato.html')
+
+
 # 🔥 API de previsão (backend)
 @app.route('/predict', methods=['POST'])
 def predict():
