@@ -222,3 +222,93 @@ body:not(.carregado) > *:not(#tela-carregamento) {
 body.carregado #tela-carregamento {
     display: none;
 }
+
+/* --- Banner --- */
+.contact-banner {
+    width: 100%;
+    padding: 100px 20px;
+    background-color: #000;
+    background-image: url('../img/stars.gif'); /* opcional: estrelas piscando */
+    background-size: cover;
+    background-position: center;
+    border-top: 2px solid #0ff;
+    border-bottom: 2px solid #0ff;
+    box-shadow: 0 0 15px #0ff;
+}
+
+.contact-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    color: #fff;
+}
+
+.galaxy-img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 20px;
+    border: 2px solid #0ff;
+    box-shadow: 0 0 20px #0ff, 0 0 40px #0ff inset;
+}
+
+/* --- Texto com borda neon e luz piscando --- */
+.typing-text {
+    font-size: 24px;
+    color: #0ff;
+    border: 2px solid #0ff;
+    padding: 15px 20px;
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 15px;
+    box-shadow: 0 0 10px #0ff, 0 0 20px #0ff inset;
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 5s steps(80, end), blink-caret 0.7s step-end infinite;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: #0ff; }
+}
+
+/* --- Descrição --- */
+.contact-description {
+    margin: 20px 0;
+    font-size: 18px;
+    color: #ccc;
+}
+
+/* --- Botões --- */
+.contact-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.neon-button {
+    padding: 12px 40px;
+    border: 2px solid #0ff;
+    color: #0ff;
+    text-decoration: none;
+    border-radius: 50px;
+    background-color: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 10px #0ff, 0 0 40px #0ff inset;
+    transition: 0.3s;
+    font-weight: bold;
+    position: relative;
+}
+
+.neon-button:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 20px #0ff, 0 0 60px #0ff inset;
+    transform: scale(1.05);
+    cursor: pointer;
+}
