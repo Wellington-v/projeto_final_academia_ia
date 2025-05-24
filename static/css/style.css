@@ -1,4 +1,4 @@
-/* 🌌 Configurações gerais */
+/* 🌌 Fundo e Configurações Globais */
 body {
     background-color: #121212;
     color: white;
@@ -9,7 +9,27 @@ body {
     overflow-x: hidden;
 }
 
-/* 🔝 Cabeçalho fixo */
+/* ✨ Fundo com Estrelinhas */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(white 1px, transparent 1px) repeat;
+    background-size: 50px 50px;
+    animation: fundoBrilho 5s linear infinite;
+    opacity: 0.05;
+    z-index: -1;
+}
+
+@keyframes fundoBrilho {
+    from { background-position: 0 0; }
+    to { background-position: 50px 50px; }
+}
+
+/* 🔝 Cabeçalho */
 header {
     background-color: #1f1f1f;
     padding: 20px;
@@ -22,12 +42,12 @@ header {
 }
 
 main {
-    margin-top: 120px; /* Espaço para o cabeçalho fixo */
+    margin-top: 120px;
 }
 
 /* 🔥 Títulos */
 h1 {
-    margin-top: 0;
+    margin: 0;
     font-size: 36px;
 }
 
@@ -40,6 +60,9 @@ h2 {
 .tabela-container {
     overflow-x: auto;
     margin-top: 20px;
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
 }
 
 table {
@@ -78,9 +101,9 @@ th {
     text-decoration: none;
     border-radius: 8px;
     font-size: 16px;
-    margin-top: 20px;
+    margin: 10px;
     display: inline-block;
-    transition: background-color 0.3s, transform 0.3s;
+    transition: 0.3s;
     box-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff;
     animation: pulse 2s infinite;
 }
@@ -90,89 +113,10 @@ th {
     transform: scale(1.05);
 }
 
-/* 🪄 Animação de pulsação */
 @keyframes pulse {
-    0% {
-        box-shadow: 0 0 5px #00bfff;
-    }
-    50% {
-        box-shadow: 0 0 20px #00bfff, 0 0 40px #00bfff;
-    }
-    100% {
-        box-shadow: 0 0 5px #00bfff;
-    }
-}
-
-/* ✨ Animação dos blocos aparecendo */
-.texto-container, .tabela-container, .chart-container {
-    background-color: #1e1e1e;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 20px auto;
-    max-width: 900px;
-    animation: aparecer 1.5s ease;
-}
-
-@keyframes aparecer {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ✨ Fundo com brilhinhos */
-body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(white 1px, transparent 1px) repeat;
-    background-size: 50px 50px;
-    animation: fundoBrilho 5s linear infinite;
-    opacity: 0.05;
-    z-index: -1;
-}
-
-@keyframes fundoBrilho {
-    from {
-        background-position: 0 0;
-    }
-    to {
-        background-position: 50px 50px;
-    }
-}
-
-.botoes-container {
-    margin-top: 30px;
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.botao {
-    background-color: #00bfff;
-    color: white;
-    padding: 10px 25px;
-    border-radius: 8px;
-    font-size: 16px;
-    margin-top: 20px;
-    display: inline-block;
-    text-decoration: none;
-    transition: background-color 0.3s, transform 0.3s;
-    box-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff;
-    animation: pulse 2s infinite;
-}
-
-.botao:hover {
-    background-color: #008fc1;
-    transform: scale(1.05);
+    0% { box-shadow: 0 0 5px #00bfff; }
+    50% { box-shadow: 0 0 20px #00bfff, 0 0 40px #00bfff; }
+    100% { box-shadow: 0 0 5px #00bfff; }
 }
 
 /* 🌌 Tela de carregamento */
@@ -184,11 +128,10 @@ body::before {
     height: 100%;
     background-color: #121212;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     z-index: 9999;
-    transition: opacity 0.5s ease;
 }
 
 #tela-carregamento .spinner {
@@ -200,38 +143,46 @@ body::before {
     animation: girar 1s linear infinite;
 }
 
-#tela-carregamento p {
-    margin-top: 16px;
-    color: white;
-    font-size: 18px;
-    font-family: Arial, sans-serif;
-}
-
-/* ✨ Animação do spinner */
 @keyframes girar {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
-/* 🔥 Esconde tudo enquanto carrega */
+#tela-carregamento p {
+    color: white;
+    margin-top: 16px;
+}
+
+/* 🔥 Esconde o site até carregar */
 body:not(.carregado) > *:not(#tela-carregamento) {
     display: none;
 }
-
-/* 🔥 Quando carrega, some a tela de carregamento */
 body.carregado #tela-carregamento {
     display: none;
 }
 
-/* 🌌 Estilo da tela de contato */
+/* ✨ Animações de entrada */
+.texto-container, .tabela-container, .chart-container {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px auto;
+    max-width: 900px;
+    animation: aparecer 1.5s ease;
+}
+
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 🎇 Página de Contato */
 .contact-content {
     max-width: 1200px;
     margin: 0 auto;
     text-align: center;
-    color: white;
 }
 
-/* --- Texto com borda neon e luz piscando --- */
 .typing-text {
     font-size: 24px;
     color: #0ff;
@@ -256,14 +207,12 @@ body.carregado #tela-carregamento {
     50% { border-color: #0ff; }
 }
 
-/* --- Descrição --- */
 .contact-description {
     margin: 20px 0;
     font-size: 18px;
     color: #ccc;
 }
 
-/* --- Botões --- */
 .contact-buttons {
     display: flex;
     flex-direction: column;
@@ -282,12 +231,19 @@ body.carregado #tela-carregamento {
     box-shadow: 0 0 10px #0ff, 0 0 40px #0ff inset;
     transition: 0.3s;
     font-weight: bold;
-    position: relative;
 }
 
 .neon-button:hover {
     background-color: rgba(0, 0, 0, 0.9);
     box-shadow: 0 0 20px #0ff, 0 0 60px #0ff inset;
     transform: scale(1.05);
-    cursor: pointer;
+}
+
+/* 🔥 Botões gerais alinhados */
+.botoes-container {
+    margin-top: 30px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
 }
