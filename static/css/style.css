@@ -223,18 +223,7 @@ body.carregado #tela-carregamento {
     display: none;
 }
 
-/* --- Banner --- */
-.contact-banner {
-    width: 100%;
-    padding: 100px 20px;
-    background-color: #000;
-    background-image: url('../img/stars.gif'); /* opcional: estrelas piscando */
-    background-size: cover;
-    background-position: center;
-    border-top: 2px solid #0ff;
-    border-bottom: 2px solid #0ff;
-    box-shadow: 0 0 15px #0ff;
-}
+
 
 .contact-content {
     max-width: 1200px;
@@ -312,3 +301,4 @@ body.carregado #tela-carregamento {
     transform: scale(1.05);
     cursor: pointer;
 }
+
