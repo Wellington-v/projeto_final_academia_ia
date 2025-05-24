@@ -6,4 +6,3 @@ xgboost
 matplotlib
 bcrypt
 gunicorn
-flask_sqlalchemy
