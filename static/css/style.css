@@ -1,249 +1,189 @@
-/* 🌌 Fundo e Configurações Globais */
-body {
-    background-color: #121212;
-    color: white;
-    font-family: Arial, sans-serif;
+/* RESET */
+* {
     margin: 0;
-    padding: 20px;
-    text-align: center;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #0a0a0a;
+    color: white;
+    font-family: 'Poppins', sans-serif;
     overflow-x: hidden;
 }
 
-/* ✨ Fundo com Estrelinhas */
+/* 🌌 Fundo com estrelas */
 body::before {
-    content: "";
+    content: '';
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(white 1px, transparent 1px) repeat;
-    background-size: 50px 50px;
-    animation: fundoBrilho 5s linear infinite;
-    opacity: 0.05;
+    width: 300%;
+    height: 300%;
+    top: -100%;
+    left: -100%;
+    background:
+        radial-gradient(2px 2px at 20% 30%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 70% 80%, #fff, transparent),
+        radial-gradient(1px 1px at 50% 50%, #fff, transparent),
+        radial-gradient(2px 2px at 90% 20%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 10% 90%, #fff, transparent),
+        radial-gradient(2px 2px at 40% 60%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 80% 30%, #fff, transparent);
+    background-color: #0a0a0a;
     z-index: -1;
+    animation: movimentoEstrelas 100s linear infinite;
 }
 
-@keyframes fundoBrilho {
-    from { background-position: 0 0; }
-    to { background-position: 50px 50px; }
+@keyframes movimentoEstrelas {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(1000px, 1000px); }
 }
 
-/* 🔝 Cabeçalho */
+/* Cabeçalho */
 header {
-    background-color: #1f1f1f;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding: 20px;
     text-align: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 1000;
 }
 
-main {
-    margin-top: 120px;
+header h1 {
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
 }
 
-/* 🔥 Títulos */
-h1 {
-    margin: 0;
-    font-size: 36px;
-}
-
-h2 {
-    margin-top: 20px;
-    font-size: 28px;
-}
-
-/* 📊 Tabelas */
-.tabela-container {
-    overflow-x: auto;
-    margin-top: 20px;
-    background-color: #1e1e1e;
-    padding: 20px;
-    border-radius: 10px;
-}
-
-table {
-    width: 90%;
+/* Containers */
+.container {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+    padding: 30px;
+    margin: 140px auto 50px auto;
     max-width: 1000px;
-    margin: 0 auto;
-    border-collapse: collapse;
-    background-color: #1e1e1e;
+    text-align: center;
+}
+
+/* Títulos */
+h1, h2, h3 {
+    color: white;
+    text-shadow: 0 0 5px #00ffff, 0 0 10px #8000ff;
+    margin-bottom: 20px;
+}
+
+p {
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+/* Tabelas */
+table {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
 }
 
 th, td {
-    padding: 10px;
-    border: 1px solid #333;
+    padding: 12px;
     text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 th {
-    background-color: #00bfff;
+    background-color: rgba(0, 255, 255, 0.2);
+    color: #00ffff;
 }
 
-/* 📈 Gráficos */
-.chart-container {
-    width: 90%;
-    max-width: 800px;
-    margin: 40px auto;
-    background-color: #1e1e1e;
-    padding: 20px;
-    border-radius: 10px;
-}
-
-/* 🔘 Botões */
-.botao, .button {
-    background-color: #00bfff;
+td {
     color: white;
-    padding: 10px 25px;
-    text-decoration: none;
-    border-radius: 8px;
+}
+
+/* Botões Neon */
+.btn {
+    background-color: transparent;
+    border: 2px solid #00ffff;
+    color: #00ffff;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
     font-size: 16px;
-    margin: 10px;
-    display: inline-block;
+    text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+    box-shadow: 0 0 5px #00ffff, 0 0 15px #00ffff;
+    animation: piscar 2s infinite alternate;
     transition: 0.3s;
-    box-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff;
-    animation: pulse 2s infinite;
+    margin: 8px;
 }
 
-.botao:hover, .button:hover {
-    background-color: #008fc1;
+@keyframes piscar {
+    from {
+        box-shadow: 0 0 5px #00ffff, 0 0 15px #00ffff;
+        text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+    }
+    to {
+        box-shadow: 0 0 15px #00ffff, 0 0 25px #00ffff;
+        text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+    }
+}
+
+.btn:hover {
+    background-color: #00ffff;
+    color: #0a0a0a;
     transform: scale(1.05);
 }
 
-@keyframes pulse {
-    0% { box-shadow: 0 0 5px #00bfff; }
-    50% { box-shadow: 0 0 20px #00bfff, 0 0 40px #00bfff; }
-    100% { box-shadow: 0 0 5px #00bfff; }
-}
-
-/* 🌌 Tela de carregamento */
-#tela-carregamento {
-    position: fixed;
-    top: 0;
-    left: 0;
+/* Formulários */
+input, select {
     width: 100%;
-    height: 100%;
-    background-color: #121212;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    z-index: 9999;
-}
-
-#tela-carregamento .spinner {
-    border: 6px solid #f3f3f3;
-    border-top: 6px solid #00bfff;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: girar 1s linear infinite;
-}
-
-@keyframes girar {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-#tela-carregamento p {
-    color: white;
-    margin-top: 16px;
-}
-
-/* 🔥 Esconde o site até carregar */
-body:not(.carregado) > *:not(#tela-carregamento) {
-    display: none;
-}
-body.carregado #tela-carregamento {
-    display: none;
-}
-
-/* ✨ Animações de entrada */
-.texto-container, .tabela-container, .chart-container {
-    background-color: #1e1e1e;
-    padding: 20px;
+    padding: 10px;
+    margin-bottom: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
-    margin: 20px auto;
-    max-width: 900px;
-    animation: aparecer 1.5s ease;
+    color: white;
+    outline: none;
 }
 
-@keyframes aparecer {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
+input:focus, select:focus {
+    border-color: #00ffff;
+    box-shadow: 0 0 10px #00ffff;
 }
 
-/* 🎇 Página de Contato */
-.contact-content {
-    max-width: 1200px;
-    margin: 0 auto;
+/* Rodapé */
+footer {
+    background: transparent;
+    padding: 15px;
     text-align: center;
-}
-
-.typing-text {
-    font-size: 24px;
-    color: #0ff;
-    border: 2px solid #0ff;
-    padding: 15px 20px;
-    display: inline-block;
-    background: rgba(0, 0, 0, 0.4);
-    border-radius: 15px;
-    box-shadow: 0 0 10px #0ff, 0 0 20px #0ff inset;
-    overflow: hidden;
-    white-space: nowrap;
-    animation: typing 5s steps(80, end), blink-caret 0.7s step-end infinite;
-}
-
-@keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
-}
-
-@keyframes blink-caret {
-    from, to { border-color: transparent }
-    50% { border-color: #0ff; }
-}
-
-.contact-description {
-    margin: 20px 0;
-    font-size: 18px;
-    color: #ccc;
-}
-
-.contact-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    align-items: center;
+    color: white;
+    font-size: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     margin-top: 30px;
 }
 
-.neon-button {
-    padding: 12px 40px;
-    border: 2px solid #0ff;
-    color: #0ff;
-    text-decoration: none;
-    border-radius: 50px;
-    background-color: rgba(0, 0, 0, 0.6);
-    box-shadow: 0 0 10px #0ff, 0 0 40px #0ff inset;
-    transition: 0.3s;
-    font-weight: bold;
-}
+/* Responsivo */
+@media (max-width: 768px) {
+    .container {
+        margin: 120px 20px 50px 20px;
+        padding: 20px;
+    }
 
-.neon-button:hover {
-    background-color: rgba(0, 0, 0, 0.9);
-    box-shadow: 0 0 20px #0ff, 0 0 60px #0ff inset;
-    transform: scale(1.05);
-}
+    h1 {
+        font-size: 28px;
+    }
 
-/* 🔥 Botões gerais alinhados */
-.botoes-container {
-    margin-top: 30px;
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
+    h2 {
+        font-size: 24px;
+    }
+
+    .btn {
+        width: auto;
+        min-width: 150px;
+    }
 }

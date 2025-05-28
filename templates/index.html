@@ -5,187 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Previsão de Cancelamento - Academia Força Local</title>
 
-    <!-- Link do CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-    <!-- Bibliotecas -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- jQuery deve vir antes do DataTables -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 </head>
 
 <body>
 
-    <!-- 🔥 Tela de Carregamento -->
-    <div id="tela-carregamento">
-        <div class="spinner"></div>
-        <p>Carregando...</p>
-    </div>
-
     <header>
         <h1>🔮 Previsão de Cancelamento</h1>
-        <p>Bem-vinda, Daiane! Aqui você pode prever o risco de cancelamento dos alunos.</p>
+        <p>Gerencie os alunos e preveja possíveis cancelamentos.</p>
     </header>
 
     <main class="container">
-        <div class="botoes-container">
-            <button id="addRow" class="botao">➕ Adicionar Cliente</button>
-            <button id="runPrediction" class="botao">🧠 Rodar Previsões</button>
-            <button id="exportExcel" class="botao">📥 Exportar para Excel</button>
-        </div>
 
-        <table id="clientes" class="display">
+        <!-- Formulário de Cadastro -->
+        <h2>➕ Cadastrar Novo Cliente</h2>
+        <form id="formCadastro">
+            <input type="text" id="nome" placeholder="Nome" required>
+            <input type="number" id="idade" placeholder="Idade" required>
+            <input type="number" id="tempo" placeholder="Tempo de treino (meses)" required>
+            <input type="number" id="frequencia" placeholder="Frequência semanal" required>
+            <select id="plano" required>
+                <option value="">Selecione o plano</option>
+                <option value="basic">Basic</option>
+                <option value="premium">Premium</option>
+            </select>
+            <button type="submit" class="btn">Cadastrar Cliente</button>
+        </form>
+
+        <!-- Tabela de Clientes -->
+        <h2>📑 Lista de Clientes</h2>
+        <table>
             <thead>
                 <tr>
+                    <th>Nome</th>
                     <th>Idade</th>
                     <th>Tempo (meses)</th>
-                    <th>Frequência Semanal</th>
-                    <th>Plano (0=Basic, 1=Premium)</th>
+                    <th>Frequência</th>
+                    <th>Plano</th>
                     <th>Previsão</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tabelaClientes">
+                {% for cliente in clientes %}
                 <tr>
-                    <td>25</td>
-                    <td>12</td>
-                    <td>3</td>
-                    <td>0</td>
-                    <td></td>
+                    <td>{{ cliente.nome }}</td>
+                    <td>{{ cliente.idade }}</td>
+                    <td>{{ cliente.tempo }}</td>
+                    <td>{{ cliente.frequencia }}</td>
+                    <td>{{ cliente.plano }}</td>
+                    <td>{{ cliente.previsao or '' }}</td>
+                    <td>
+                        <button class="btn" onclick="rodarPrevisao({{ cliente.id }})">Rodar Previsão</button>
+                    </td>
                 </tr>
+                {% endfor %}
             </tbody>
         </table>
 
-        <div class="chart-container">
-            <h2>📊 Resumo das Previsões</h2>
-            <canvas id="barChart"></canvas>
-            <canvas id="lineChart" style="margin-top: 20px;"></canvas>
-        </div>
     </main>
 
     <div class="botoes-container">
-        <a href="/" class="botao">🏠 Início</a>
-        <a href="/graficos" class="botao">📊 Gráficos</a>
-        <a href="/explicacao" class="botao">❓ Explicação</a>
+        <a href="/" class="btn">🏠 Início</a>
+        <a href="/graficos" class="btn">📊 Gráficos</a>
+        <a href="/explicacao" class="btn">❓ Explicação</a>
+        <a href="/contato" class="btn">✨ Contato</a>
     </div>
 
-    <div class="botoes-container">
-        <a href="/contato" class="botao">✨ Fale Conosco ✨</a>
-     </div>
-
     <script>
-        $(document).ready(function() {
-            var table = $('#clientes').DataTable();
+        // Cadastro de cliente
+        $('#formCadastro').on('submit', function(e) {
+            e.preventDefault();
+            const data = {
+                nome: $('#nome').val(),
+                idade: $('#idade').val(),
+                tempo: $('#tempo').val(),
+                frequencia: $('#frequencia').val(),
+                plano: $('#plano').val()
+            };
 
-            $('#addRow').on('click', function() {
-                table.row.add(['', '', '', '', '']).draw();
+            fetch('/add_cliente', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(res => {
+                alert(res.message);
+                location.reload();
             });
-
-            $('#runPrediction').on('click', function() {
-                table.rows().every(function() {
-                    var data = this.data();
-                    const idade = parseFloat(data[0]);
-                    const tempo = parseFloat(data[1]);
-                    const freq = parseFloat(data[2]);
-                    const plano = parseFloat(data[3]);
-
-                    if ([idade, tempo, freq, plano].some(isNaN)) {
-                        this.data([idade, tempo, freq, plano, 'Dados inválidos']);
-                        return;
-                    }
-
-                    fetch('/predict', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ features: [idade, tempo, freq, plano] })
-                    })
-                    .then(res => res.json())
-                    .then(res => {
-                        const resultado = res.cancelamento_previsto === 1 ?
-                            `⚠️ ${res.probabilidade_cancelamento}% risco` :
-                            `✅ Seguro (${100 - res.probabilidade_cancelamento}%)`;
-                        data[4] = resultado;
-                        this.data(data).draw();
-                        updateCharts();
-                    })
-                    .catch(() => {
-                        data[4] = 'Erro na previsão';
-                        this.data(data).draw();
-                    });
-                });
-            });
-
-            $('#exportExcel').on('click', function() {
-                let csv = 'Idade,Tempo,Frequência,Plano,Previsão\n';
-                table.rows().every(function() {
-                    csv += this.data().join(',') + "\n";
-                });
-                const blob = new Blob([csv], { type: 'text/csv' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.setAttribute('hidden', '');
-                a.setAttribute('href', url);
-                a.setAttribute('download', 'clientes.csv');
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            });
-
-            const barCtx = document.getElementById('barChart').getContext('2d');
-            const lineCtx = document.getElementById('lineChart').getContext('2d');
-
-            const barChart = new Chart(barCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Seguro', 'Risco'],
-                    datasets: [{
-                        label: 'Clientes',
-                        data: [0, 0],
-                        backgroundColor: ['#22c55e', '#f97316']
-                    }]
-                },
-                options: { responsive: true, plugins: { legend: { display: false } } }
-            });
-
-            const lineChart = new Chart(lineCtx, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Previsões feitas',
-                        data: [],
-                        borderColor: '#3b82f6',
-                        tension: 0.1
-                    }]
-                },
-                options: { responsive: true }
-            });
-
-            function updateCharts() {
-                const data = table.rows().data().toArray();
-                let seguro = 0, risco = 0;
-                data.forEach(row => {
-                    if (row[4].includes('⚠️')) risco++;
-                    else if (row[4].includes('✅')) seguro++;
-                });
-                barChart.data.datasets[0].data = [seguro, risco];
-                barChart.update();
-
-                lineChart.data.labels.push(new Date().toLocaleTimeString());
-                lineChart.data.datasets[0].data.push(seguro + risco);
-                lineChart.update();
-            }
         });
 
-        // Script da tela de carregamento
-        window.addEventListener("load", function() {
-            document.body.classList.add("carregado");
-        });
+        // Rodar previsão
+        function rodarPrevisao(clienteId) {
+            fetch(`/predict/${clienteId}`, {
+                method: 'POST'
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.erro) {
+                    alert('Erro: ' + res.erro);
+                } else {
+                    alert(res.previsao);
+                    location.reload();
+                }
+            });
+        }
     </script>
-
-   
-
 
 </body>
 </html>

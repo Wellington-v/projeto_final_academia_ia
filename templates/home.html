@@ -3,44 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bem-vindo(a) - IA Academia</title>
+    <title>Home</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
+    <header>
+        <h1>Academia Força Local – IA</h1>
+    </header>
 
-    <!-- 🔥 Tela de Carregamento -->
-    <div id="tela-carregamento">
-        <div class="spinner"></div>
-        <p>Carregando...</p>
-    </div>
-
-    <h1>Bem-vindo(a) ao Sistema de Academia IA</h1>
-
-    <div class="texto-container">
+    <main class="container">
+        <h2>Seja Bem-vindo(a)!</h2>
         <p>
-            Seja bem-vindo(a) à plataforma de inteligência artificial de <strong>Academias!</strong>! <br><br>
-            Este sistema foi desenvolvido com o objetivo de gerenciar os alunos possuem maior risco de cancelar seus planos,
-            permitindo que vocês tomem decisões rápidas e inteligentes para melhorar a retenção de alunos e o desempenho da academia.
+            Este sistema utiliza inteligência artificial para ajudar no gerenciamento dos alunos,
+            prevenindo cancelamentos e otimizando a gestão da sua academia.
         </p>
-
-        <p>
-            🧠 A IA foi treinada com dados e comportamentos de clientes para oferecer análises precisas e previsões eficientes. <br>
-            ⚙️ Aqui, você poderá acessar informações, visualizar gráficos, e realizar previsões de maneira simples e intuitiva.
-        </p>
-    </div>
+    </main>
 
     <div class="botoes-container">
-        <a href="/explicacao" class="botao">🚀 Começar</a>
-        <a href="/previsao" class="botao">🔮 Ir para Previsões</a>
-        <a href="/graficos" class="botao">📊 Ver Gráficos</a>
+        <a href="/explicacao" class="btn">❓ Explicação</a>
+        <a href="/previsao" class="btn">🔮 Previsões</a>
+        <a href="/graficos" class="btn">📊 Gráficos</a>
+        <a href="/contato" class="btn">✨ Contato</a>
     </div>
 
-    <!-- Script da tela de carregamento -->
-    <script>
-        window.addEventListener("load", function() {
-            document.body.classList.add("carregado");
-        });
-    </script>
-
+    <footer>
+        <p>© 2025 Academia Força Local – Todos os direitos reservados | Desenvolvido por Shadow</p>
+    </footer>
 </body>
 </html>

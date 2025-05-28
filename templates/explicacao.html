@@ -3,65 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Como Funciona a IA?</title>
+    <title>Como Funciona a IA</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
+    <header>
+        <h1>Academia Força Local – IA</h1>
+    </header>
 
-    <!-- 🔥 Tela de Carregamento -->
-    <div id="tela-carregamento">
-        <div class="spinner"></div>
-        <p>Carregando...</p>
-    </div>
-
-    <h1>Como funciona a IA da Academia?</h1>
-
-    <div class="texto-container">
+    <main class="container">
+        <h2>🧠 Como funciona a nossa IA?</h2>
         <p>
-            A nossa inteligência artificial foi criada com o objetivo de ajudá-los na gestão de alunos que participam de suas academias. 
-            Ela analisa uma série de informações dos alunos, como:
+            A IA analisa idade, tempo de treino, frequência e tipo de plano para prever o risco de cancelamento.
+            Assim, você consegue agir antes do aluno desistir!
         </p>
         <ul>
-            <li>➡️ Idade do aluno</li>
-            <li>➡️ Tempo de permanência na academia (em meses)</li>
-            <li>➡️ Frequência semanal (quantas vezes o aluno treina por semana)</li>
-            <li>➡️ Tipo de plano (Básico ou Premium)</li>
+            <li>➡️ Idade</li>
+            <li>➡️ Tempo de treino (meses)</li>
+            <li>➡️ Frequência semanal</li>
+            <li>➡️ Plano (Básico ou Premium)</li>
         </ul>
-
         <p>
-            Com esses dados, o sistema gera uma previsão sobre o risco de cancelamento do aluno.
-            Se a IA identificar que há uma alta probabilidade do aluno desistir, 
-            ela informa o(a)s gerentes com antecedência. Assim, dando a possibilidade de oferecer: promoções, 
-            suporte, acompanhamento personalizado ou qualquer outra estratégia para melhorar a experiência do aluno.
-            Impedindo_o de cancelar sua assinatura.
+            Usamos algoritmos como Random Forest, SVM e XGBoost para entregar resultados precisos.
         </p>
-
-        <p>
-            A IA foi treinada com diversos algoritmos de aprendizado de máquina, 
-            como Random Forest, SVM e XGBoost, utilizando dados reais e simulados para 
-            garantir uma previsão mais precisa possível.
-        </p>
-
-        <p>
-            O objetivo não é apenas prever o cancelamento, mas fornecer uma ferramenta 
-            inteligente que te ajude a cuidar dos seus alunos, aumentar a retenção e, claro, 
-            garantir o sucesso da sua academia!
-        </p>
-    </div>
+    </main>
 
     <div class="botoes-container">
-        <a href="/" class="botao">🏠 Início</a>
-        <a href="/previsao" class="botao">🔮 Ir para Previsões</a>
-        <a href="/graficos" class="botao">📊 Ver Gráficos</a>
-        <a href="javascript:history.back()" class="botao">🔙 Voltar</a>
+        <a href="/" class="btn">🏠 Início</a>
+        <a href="/graficos" class="btn">📊 Ver Gráficos</a>
+        <a href="/previsao" class="btn">🔮 Previsões</a>
+        <a href="/contato" class="btn">✨ Contato</a>
     </div>
 
-    <!-- Script da tela de carregamento -->
-    <script>
-        window.addEventListener("load", function() {
-            document.body.classList.add("carregado");
-        });
-    </script>
-
+    <footer>
+        <p>© 2025 Academia Força Local – Todos os direitos reservados | Desenvolvido por Shadow</p>
+    </footer>
 </body>
 </html>
