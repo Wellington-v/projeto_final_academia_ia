@@ -7,3 +7,4 @@ matplotlib
 bcrypt
 gunicorn
 faker
+flask_sqlalchemy
