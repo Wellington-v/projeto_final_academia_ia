@@ -10,7 +10,6 @@
 </head>
 
 <body>
-
     <header>
         <h1>📊 Dashboard de Análise</h1>
         <p>Acompanhe o desempenho da sua academia.</p>
@@ -29,74 +28,59 @@
     <div class="botoes-container">
         <a href="/" class="btn">🏠 Início</a>
         <a href="/previsao" class="btn">🧠 Previsões</a>
-        <a href="/explicacao" class="btn">❓ Explicação</a>
-        <a href="/contato" class="btn">✨ Contato</a>
     </div>
 
+    <!-- Variáveis escondidas com dados -->
+    <span id="seguroValor" style="display:none;">{{ seguro if seguro is defined else 0 }}</span>
+    <span id="riscoValor" style="display:none;">{{ risco if risco is defined else 0 }}</span>
+
     <script>
-        const seguro = {{ seguro | tojson | default(0) }};
-        const risco = {{ risco | tojson | default(0) }};
+        const seguro = parseInt(document.getElementById("seguroValor").textContent);
+        const risco = parseInt(document.getElementById("riscoValor").textContent);
 
-        // Gráfico de Pizza
-        const ctxPizza = document.getElementById('graficoStatus').getContext('2d');
-        new Chart(ctxPizza, {
-            type: 'doughnut',
-            data: {
-                labels: ['Seguro', 'Risco'],
-                datasets: [{
-                    data: [seguro, risco],
-                    backgroundColor: ['#22c55e', '#f97316'],
-                    borderColor: 'black',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: 'white'
-                        }
-                    }
-                }
-            }
-        });
+        const ctx1 = document.getElementById('graficoStatus');
+        const ctx2 = document.getElementById('graficoBarra');
 
-        // Gráfico de Barras
-        const ctxBarra = document.getElementById('graficoBarra').getContext('2d');
-        new Chart(ctxBarra, {
-            type: 'bar',
-            data: {
-                labels: ['Seguro', 'Risco'],
-                datasets: [{
-                    label: 'Quantidade de Alunos',
-                    data: [seguro, risco],
-                    backgroundColor: ['#22c55e', '#f97316'],
-                    borderColor: 'black',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    x: {
-                        ticks: { color: 'white' }
-                    },
-                    y: {
-                        ticks: { color: 'white' },
-                        beginAtZero: true
-                    }
+        if (ctx1 && ctx2) {
+            new Chart(ctx1, {
+                type: 'pie',
+                data: {
+                    labels: ['Seguros', 'Em Risco'],
+                    datasets: [{
+                        data: [seguro, risco],
+                        backgroundColor: ['#4caf50', '#f44336']
+                    }]
                 },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: 'white'
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['Seguros', 'Em Risco'],
+                    datasets: [{
+                        label: 'Quantidade',
+                        data: [seguro, risco],
+                        backgroundColor: ['#4caf50', '#f44336']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Situação dos Alunos'
                         }
                     }
                 }
-            }
-        });
+            });
+        }
     </script>
-
 </body>
 </html>

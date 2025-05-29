@@ -19,7 +19,6 @@
 
     <main class="container">
 
-        <!-- Formulário de Cadastro -->
         <h2>➕ Cadastrar Novo Cliente</h2>
         <form id="formCadastro">
             <input type="text" id="nome" placeholder="Nome" required>
@@ -27,21 +26,42 @@
             <input type="number" id="tempo" placeholder="Tempo de treino (meses)" required>
             <input type="number" id="frequencia" placeholder="Frequência semanal" required>
             <select id="plano" required>
-                <option value="">Selecione o plano</option>
+                <option value="">Plano</option>
                 <option value="basic">Basic</option>
                 <option value="premium">Premium</option>
             </select>
+            <select id="forma_pagamento" required>
+                <option value="">Forma de Pagamento</option>
+                <option value="mensal">Mensal</option>
+                <option value="trimestral">Trimestral</option>
+                <option value="anual">Anual</option>
+            </select>
+            <input type="number" id="feedback" placeholder="Nota do feedback (1 a 5)" required>
+            <select id="objetivo" required>
+                <option value="">Objetivo</option>
+                <option value="emagrecimento">Emagrecimento</option>
+                <option value="hipertrofia">Hipertrofia</option>
+                <option value="resistência">Resistência</option>
+                <option value="saúde">Saúde</option>
+            </select>
+            <label><input type="checkbox" id="gosta_treino"> Gosta de treinar?</label><br>
+            <label><input type="checkbox" id="frequenta_fds"> Frequenta FDS?</label><br>
+            <label><input type="checkbox" id="reclamacoes"> Tem reclamações?</label><br>
+            <label><input type="checkbox" id="usa_personal"> Usa personal?</label><br>
+            <label><input type="checkbox" id="tem_dores"> Relata dores?</label><br>
+            <label><input type="checkbox" id="usa_suplemento"> Usa suplemento?</label><br>
             <button type="submit" class="btn">Cadastrar Cliente</button>
         </form>
 
-        <!-- Tabela de Clientes -->
+        <div id="resultadoPrevisao" style="margin-top: 20px; font-size: 18px;"></div>
+
         <h2>📑 Lista de Clientes</h2>
         <table>
             <thead>
                 <tr>
                     <th>Nome</th>
                     <th>Idade</th>
-                    <th>Tempo (meses)</th>
+                    <th>Tempo</th>
                     <th>Frequência</th>
                     <th>Plano</th>
                     <th>Previsão</th>
@@ -57,9 +77,7 @@
                     <td>{{ cliente.frequencia }}</td>
                     <td>{{ cliente.plano }}</td>
                     <td>{{ cliente.previsao or '' }}</td>
-                    <td>
-                        <button class="btn" onclick="rodarPrevisao({{ cliente.id }})">Rodar Previsão</button>
-                    </td>
+                    <td><button class="btn rodar-btn" data-id="{{ cliente.id }}">Rodar Previsão</button></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -75,7 +93,6 @@
     </div>
 
     <script>
-        // Cadastro de cliente
         $('#formCadastro').on('submit', function(e) {
             e.preventDefault();
             const data = {
@@ -83,7 +100,16 @@
                 idade: $('#idade').val(),
                 tempo: $('#tempo').val(),
                 frequencia: $('#frequencia').val(),
-                plano: $('#plano').val()
+                plano: $('#plano').val(),
+                forma_pagamento: $('#forma_pagamento').val(),
+                feedback: $('#feedback').val(),
+                objetivo: $('#objetivo').val(),
+                gosta_treino: $('#gosta_treino').is(':checked') ? 1 : 0,
+                frequenta_fds: $('#frequenta_fds').is(':checked') ? 1 : 0,
+                reclamacoes: $('#reclamacoes').is(':checked') ? 1 : 0,
+                usa_personal: $('#usa_personal').is(':checked') ? 1 : 0,
+                tem_dores: $('#tem_dores').is(':checked') ? 1 : 0,
+                usa_suplemento: $('#usa_suplemento').is(':checked') ? 1 : 0
             };
 
             fetch('/add_cliente', {
@@ -98,7 +124,11 @@
             });
         });
 
-        // Rodar previsão
+        $(document).on('click', '.rodar-btn', function () {
+            const id = $(this).data('id');
+            rodarPrevisao(id);
+        });
+
         function rodarPrevisao(clienteId) {
             fetch(`/predict/${clienteId}`, {
                 method: 'POST'
@@ -108,7 +138,7 @@
                 if (res.erro) {
                     alert('Erro: ' + res.erro);
                 } else {
-                    alert(res.previsao);
+                    document.getElementById('resultadoPrevisao').innerHTML = `🧠 Resultado: <strong>${res.previsao}</strong>`;
                     location.reload();
                 }
             });

@@ -11,6 +11,7 @@ app = Flask(__name__)
 # ==========================
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///academia.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 
 # ==========================
@@ -23,6 +24,15 @@ class Cliente(db.Model):
     tempo = db.Column(db.Integer, nullable=False)
     frequencia = db.Column(db.Integer, nullable=False)
     plano = db.Column(db.String(50), nullable=False)
+    forma_pagamento = db.Column(db.String(50), nullable=False)
+    feedback = db.Column(db.Integer, nullable=False)
+    objetivo = db.Column(db.String(50), nullable=False)
+    gosta_treino = db.Column(db.Integer, nullable=False)
+    frequenta_fds = db.Column(db.Integer, nullable=False)
+    reclamacoes = db.Column(db.Integer, nullable=False)
+    usa_personal = db.Column(db.Integer, nullable=False)
+    tem_dores = db.Column(db.Integer, nullable=False)
+    usa_suplemento = db.Column(db.Integer, nullable=False)
     previsao = db.Column(db.String(100), nullable=True)
 
 # ==========================
@@ -44,34 +54,15 @@ except Exception as e:
 # ==========================
 @app.route('/')
 def home():
-    return render_template('home.html')
-
-@app.route('/explicacao')
-def explicacao():
-    return render_template('explicacao.html')
-
-@app.route('/contato')
-def contato():
-    return render_template('contato.html')
+    clientes = Cliente.query.all()
+    return render_template('index.html', clientes=clientes)
 
 @app.route('/graficos')
 def graficos():
     clientes = Cliente.query.all()
-
     risco = sum(1 for c in clientes if c.previsao and '⚠️' in c.previsao)
     seguro = sum(1 for c in clientes if c.previsao and '✅' in c.previsao)
-
-    return render_template(
-        'graficos.html',
-        dados=clientes,
-        risco=risco,
-        seguro=seguro
-    )
-
-@app.route('/previsao')
-def previsao():
-    clientes = Cliente.query.all()
-    return render_template('index.html', clientes=clientes)
+    return render_template('graficos.html', dados=clientes, risco=risco, seguro=seguro)
 
 # ==========================
 # 🔥 API — CADASTRO CLIENTE
@@ -86,31 +77,21 @@ def add_cliente():
         tempo=data['tempo'],
         frequencia=data['frequencia'],
         plano=data['plano'],
+        forma_pagamento=data['forma_pagamento'],
+        feedback=data['feedback'],
+        objetivo=data['objetivo'],
+        gosta_treino=data['gosta_treino'],
+        frequenta_fds=data['frequenta_fds'],
+        reclamacoes=data['reclamacoes'],
+        usa_personal=data['usa_personal'],
+        tem_dores=data['tem_dores'],
+        usa_suplemento=data['usa_suplemento'],
         previsao=""
     )
     db.session.add(cliente)
     db.session.commit()
 
     return jsonify({'message': 'Cliente cadastrado com sucesso'})
-
-# ==========================
-# 🔥 API — LISTAR CLIENTES
-# ==========================
-@app.route('/clientes')
-def listar_clientes():
-    clientes = Cliente.query.all()
-    output = []
-    for c in clientes:
-        output.append({
-            'id': c.id,
-            'nome': c.nome,
-            'idade': c.idade,
-            'tempo': c.tempo,
-            'frequencia': c.frequencia,
-            'plano': c.plano,
-            'previsao': c.previsao
-        })
-    return jsonify(output)
 
 # ==========================
 # 🔥 API — FAZER PREVISÃO
@@ -126,9 +107,21 @@ def predict(cliente_id):
         return jsonify({'erro': 'Cliente não encontrado'}), 404
 
     try:
-        features = np.array([[cliente.idade, cliente.tempo, cliente.frequencia, 1 if cliente.plano.lower() == 'premium' else 0]])
-        features_scaled = scaler.transform(features)
+        features = np.array([[
+            cliente.idade, cliente.tempo, cliente.frequencia,
+            1 if cliente.plano.lower() == 'premium' else 0,
+            1 if cliente.forma_pagamento.lower() == 'trimestral' else (2 if cliente.forma_pagamento.lower() == 'anual' else 0),
+            cliente.feedback,
+            {'emagrecimento': 0, 'hipertrofia': 1, 'resistência': 2, 'saúde': 3}.get(cliente.objetivo.lower(), 0),
+            cliente.gosta_treino,
+            cliente.frequenta_fds,
+            cliente.reclamacoes,
+            cliente.usa_personal,
+            cliente.tem_dores,
+            cliente.usa_suplemento
+        ]])
 
+        features_scaled = scaler.transform(features)
         resultado = modelo.predict(features_scaled)[0]
         probabilidade = modelo.predict_proba(features_scaled)[0]
         prob_cancelamento = round(probabilidade[1] * 100, 2)
