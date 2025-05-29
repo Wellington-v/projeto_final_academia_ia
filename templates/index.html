@@ -2,16 +2,21 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- previne Quirks mode -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Previsão de Cancelamento - Academia Força Local</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- JQuery PRIMEIRO -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Estilo CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
-
     <header>
         <h1>🔮 Previsão de Cancelamento</h1>
         <p>Gerencie os alunos e preveja possíveis cancelamentos.</p>
@@ -21,41 +26,19 @@
 
         <h2>➕ Cadastrar Novo Cliente</h2>
         <form id="formCadastro">
-            <input type="text" id="nome" placeholder="Nome" required>
-            <input type="number" id="idade" placeholder="Idade" required>
-            <input type="number" id="tempo" placeholder="Tempo de treino (meses)" required>
-            <input type="number" id="frequencia" placeholder="Frequência semanal" required>
-            <select id="plano" required>
-                <option value="">Plano</option>
-                <option value="basic">Basic</option>
-                <option value="premium">Premium</option>
-            </select>
-            <select id="forma_pagamento" required>
-                <option value="">Forma de Pagamento</option>
-                <option value="mensal">Mensal</option>
-                <option value="trimestral">Trimestral</option>
-                <option value="anual">Anual</option>
-            </select>
-            <input type="number" id="feedback" placeholder="Nota do feedback (1 a 5)" required>
-            <select id="objetivo" required>
-                <option value="">Objetivo</option>
-                <option value="emagrecimento">Emagrecimento</option>
-                <option value="hipertrofia">Hipertrofia</option>
-                <option value="resistência">Resistência</option>
-                <option value="saúde">Saúde</option>
-            </select>
-            <label><input type="checkbox" id="gosta_treino"> Gosta de treinar?</label><br>
-            <label><input type="checkbox" id="frequenta_fds"> Frequenta FDS?</label><br>
-            <label><input type="checkbox" id="reclamacoes"> Tem reclamações?</label><br>
-            <label><input type="checkbox" id="usa_personal"> Usa personal?</label><br>
-            <label><input type="checkbox" id="tem_dores"> Relata dores?</label><br>
-            <label><input type="checkbox" id="usa_suplemento"> Usa suplemento?</label><br>
+            <!-- seus inputs continuam aqui -->
             <button type="submit" class="btn">Cadastrar Cliente</button>
         </form>
 
         <div id="resultadoPrevisao" style="margin-top: 20px; font-size: 18px;"></div>
 
         <h2>📑 Lista de Clientes</h2>
+
+        <!-- 🔄 BOTÃO DE PREVISÃO GLOBAL -->
+        <div style="margin: 20px 0;">
+            <button class="btn" onclick="preverTodos()">🔄 Rodar Previsão para Todos</button>
+        </div>
+
         <table>
             <thead>
                 <tr>
@@ -77,12 +60,11 @@
                     <td>{{ cliente.frequencia }}</td>
                     <td>{{ cliente.plano }}</td>
                     <td>{{ cliente.previsao or '' }}</td>
-                    <td><button class="btn rodar-btn" data-id="{{ cliente.id }}">Rodar Previsão</button></td>
+                    <td><button class='btn' onclick="rodarPrevisao('{{ cliente.id }}')">Rodar Previsão</button></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-
     </main>
 
     <div class="botoes-container">
@@ -93,6 +75,7 @@
     </div>
 
     <script>
+        // Cadastrar cliente
         $('#formCadastro').on('submit', function(e) {
             e.preventDefault();
             const data = {
@@ -124,13 +107,9 @@
             });
         });
 
-        $(document).on('click', '.rodar-btn', function () {
-            const id = $(this).data('id');
-            rodarPrevisao(id);
-        });
-
+        // Rodar previsão para 1 cliente
         function rodarPrevisao(clienteId) {
-            fetch(`/predict/${clienteId}`, {
+            fetch(`/prever/${clienteId}`, {
                 method: 'POST'
             })
             .then(res => res.json())
@@ -143,7 +122,22 @@
                 }
             });
         }
-    </script>
 
+        // Rodar previsão para TODOS
+        function preverTodos() {
+            fetch('/prever_todos', {
+                method: 'POST'
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.erro) {
+                    alert('Erro: ' + res.erro);
+                } else {
+                    alert(res.mensagem);
+                    location.reload();
+                }
+            });
+        }
+    </script>
 </body>
 </html>

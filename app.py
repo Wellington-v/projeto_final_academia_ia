@@ -1,151 +1,133 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+import joblib
 import numpy as np
-import pickle
 import os
 
+# ========== CONFIGURAÇÕES ==========
 app = Flask(__name__)
-
-# ==========================
-# 🚀 CONFIGURAÇÃO DO BANCO
-# ==========================
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///academia.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///banco.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db = SQLAlchemy(app)
 
-# ==========================
-# 🚀 MODELO DO BANCO
-# ==========================
+# ========== MODELO DO BANCO ==========
 class Cliente(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(100), nullable=False)
     idade = db.Column(db.Integer, nullable=False)
-    tempo = db.Column(db.Integer, nullable=False)
-    frequencia = db.Column(db.Integer, nullable=False)
-    plano = db.Column(db.String(50), nullable=False)
-    forma_pagamento = db.Column(db.String(50), nullable=False)
-    feedback = db.Column(db.Integer, nullable=False)
-    objetivo = db.Column(db.String(50), nullable=False)
-    gosta_treino = db.Column(db.Integer, nullable=False)
-    frequenta_fds = db.Column(db.Integer, nullable=False)
-    reclamacoes = db.Column(db.Integer, nullable=False)
-    usa_personal = db.Column(db.Integer, nullable=False)
-    tem_dores = db.Column(db.Integer, nullable=False)
-    usa_suplemento = db.Column(db.Integer, nullable=False)
-    previsao = db.Column(db.String(100), nullable=True)
+    sexo = db.Column(db.String(1), nullable=False)
+    tempo_treino = db.Column(db.Float, nullable=False)
+    frequencia_semanal = db.Column(db.Integer, nullable=False)
+    plano = db.Column(db.String(20), nullable=False)
+    cancelou = db.Column(db.Integer, nullable=False)
+    previsao = db.Column(db.String(200))
 
-# ==========================
-# 🚀 CARREGAR MODELO IA
-# ==========================
-MODEL_PATH = os.path.join('modelos', 'modelo_academia.pkl')
-
-try:
-    with open(MODEL_PATH, 'rb') as f:
-        modelo, scaler = pickle.load(f)
-    print("✅ Modelo e scaler carregados com sucesso.")
-except Exception as e:
-    print(f"❌ ERRO ao carregar o modelo: {e}")
-    modelo = None
-    scaler = None
-
-# ==========================
-# 🔥 ROTAS DE TELAS
-# ==========================
+# ========== ROTAS HTML ==========
 @app.route('/')
 def home():
+    return render_template('home.html')
+
+@app.route('/previsao')
+def previsao():
     clientes = Cliente.query.all()
     return render_template('index.html', clientes=clientes)
 
+@app.route('/explicacao')
+def explicacao():
+    return render_template('explicacao.html')
+
 @app.route('/graficos')
 def graficos():
+    seguro = Cliente.query.filter(Cliente.previsao.like('%Seguro%')).count()
+    risco = Cliente.query.filter(Cliente.previsao.like('%Risco%')).count()
+    return render_template('graficos.html', seguro=seguro, risco=risco)
+
+@app.route('/contato')
+def contato():
+    return render_template('contato.html')
+
+# ========== ROTAS JSON/API ==========
+@app.route('/clientes')
+def listar_clientes():
     clientes = Cliente.query.all()
-    risco = sum(1 for c in clientes if c.previsao and '⚠️' in c.previsao)
-    seguro = sum(1 for c in clientes if c.previsao and '✅' in c.previsao)
-    return render_template('graficos.html', dados=clientes, risco=risco, seguro=seguro)
+    lista = []
+    for c in clientes:
+        lista.append({
+            'id': c.id,
+            'nome': c.nome,
+            'idade': c.idade,
+            'sexo': c.sexo,
+            'tempo_treino': c.tempo_treino,
+            'frequencia_semanal': c.frequencia_semanal,
+            'plano': c.plano,
+            'cancelou': c.cancelou,
+            'previsao': c.previsao
+        })
+    return jsonify(lista)
 
-# ==========================
-# 🔥 API — CADASTRO CLIENTE
-# ==========================
-@app.route('/add_cliente', methods=['POST'])
-def add_cliente():
-    data = request.get_json()
-
-    cliente = Cliente(
-        nome=data['nome'],
-        idade=data['idade'],
-        tempo=data['tempo'],
-        frequencia=data['frequencia'],
-        plano=data['plano'],
-        forma_pagamento=data['forma_pagamento'],
-        feedback=data['feedback'],
-        objetivo=data['objetivo'],
-        gosta_treino=data['gosta_treino'],
-        frequenta_fds=data['frequenta_fds'],
-        reclamacoes=data['reclamacoes'],
-        usa_personal=data['usa_personal'],
-        tem_dores=data['tem_dores'],
-        usa_suplemento=data['usa_suplemento'],
-        previsao=""
-    )
-    db.session.add(cliente)
-    db.session.commit()
-
-    return jsonify({'message': 'Cliente cadastrado com sucesso'})
-
-# ==========================
-# 🔥 API — FAZER PREVISÃO
-# ==========================
-@app.route('/predict/<int:cliente_id>', methods=['POST'])
-def predict(cliente_id):
-    if not modelo or not scaler:
-        return jsonify({'erro': 'Modelo não carregado no servidor.'}), 500
-
-    cliente = Cliente.query.get(cliente_id)
-
-    if not cliente:
-        return jsonify({'erro': 'Cliente não encontrado'}), 404
-
+@app.route('/prever/<int:cliente_id>', methods=['POST'])
+def prever_cancelamento(cliente_id):
     try:
-        features = np.array([[
-            cliente.idade, cliente.tempo, cliente.frequencia,
-            1 if cliente.plano.lower() == 'premium' else 0,
-            1 if cliente.forma_pagamento.lower() == 'trimestral' else (2 if cliente.forma_pagamento.lower() == 'anual' else 0),
-            cliente.feedback,
-            {'emagrecimento': 0, 'hipertrofia': 1, 'resistência': 2, 'saúde': 3}.get(cliente.objetivo.lower(), 0),
-            cliente.gosta_treino,
-            cliente.frequenta_fds,
-            cliente.reclamacoes,
-            cliente.usa_personal,
-            cliente.tem_dores,
-            cliente.usa_suplemento
-        ]])
+        cliente = Cliente.query.get(cliente_id)
+        if not cliente:
+            return jsonify({'erro': 'Cliente não encontrado'}), 404
 
-        features_scaled = scaler.transform(features)
-        resultado = modelo.predict(features_scaled)[0]
-        probabilidade = modelo.predict_proba(features_scaled)[0]
-        prob_cancelamento = round(probabilidade[1] * 100, 2)
+        modelo = joblib.load('modelos/modelo.pkl')
+        scaler = joblib.load('modelos/scaler.pkl')
 
-        if resultado == 1:
-            texto_previsao = f"⚠️ {prob_cancelamento}% risco"
+        dados = np.array([[cliente.idade, cliente.tempo_treino, cliente.frequencia_semanal]])
+        dados_escalados = scaler.transform(dados)
+        probabilidade = modelo.predict_proba(dados_escalados)[0]
+        risco = round(probabilidade[1] * 100, 2)
+
+        if modelo.predict(dados_escalados)[0] == 1:
+            texto = f"⚠️ Risco de cancelamento: {risco}%"
         else:
-            texto_previsao = f"✅ Seguro ({100 - prob_cancelamento}%)"
+            texto = f"✅ Seguro: {100 - risco}%"
 
-        cliente.previsao = texto_previsao
+        cliente.previsao = texto
         db.session.commit()
 
         return jsonify({
-            'previsao': texto_previsao,
-            'cancelamento_previsto': int(resultado),
-            'probabilidade_cancelamento': prob_cancelamento
+            'cliente_id': cliente.id,
+            'nome': cliente.nome,
+            'previsao': texto,
+            'risco_cancelamento': risco
         })
 
     except Exception as e:
         return jsonify({'erro': f'Erro na previsão: {str(e)}'}), 500
 
-# ==========================
-# 🚀 RODAR APP
-# ==========================
+@app.route('/prever_todos', methods=['POST'])
+def prever_todos():
+    try:
+        modelo = joblib.load('modelos/modelo.pkl')
+        scaler = joblib.load('modelos/scaler.pkl')
+
+        clientes = Cliente.query.all()
+
+        for cliente in clientes:
+            dados = np.array([[cliente.idade, cliente.tempo_treino, cliente.frequencia_semanal]])
+            dados_escalados = scaler.transform(dados)
+            probabilidade = modelo.predict_proba(dados_escalados)[0]
+            risco = round(probabilidade[1] * 100, 2)
+
+            if modelo.predict(dados_escalados)[0] == 1:
+                texto = f"⚠️ Risco de cancelamento: {risco}%"
+            else:
+                texto = f"✅ Seguro: {100 - risco}%"
+
+            cliente.previsao = texto
+
+        db.session.commit()
+        return jsonify({'mensagem': 'Previsões geradas para todos os clientes!'})
+
+    except Exception as e:
+        return jsonify({'erro': f'Erro ao prever para todos: {str(e)}'}), 500
+
+# ========== EXECUÇÃO ==========
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
